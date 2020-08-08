@@ -89,10 +89,10 @@ const video_on_off = () => {
 
 	if (enabled) {
 		local_video_stream.getVideoTracks()[0].enabled = false;
-		video_on();
+		video_off();
 	} else {
 		local_video_stream.getVideoTracks()[0].enabled = true;
-		video_off();
+		video_on();
 	}
 };
 
