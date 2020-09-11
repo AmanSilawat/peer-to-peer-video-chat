@@ -14,27 +14,29 @@ import Profile from './../pages/Profile.js';
 import Room from './../pages/Room.js';
 import SignUp from './../pages/SignUp.js';
 import Home from './../pages/Home.js';
+import ResetCredentials from '../pages/ResetCredentials.js';
 
 // services
 import Utils from './../services/utils.js';
 
+
 // List of supported routes. Any url other than these routes will throw a 404 error
 const routes = {
-	'/': Home,
+	'/home': Home,
 	'/call': Call,
 	'/io-test': IOTest,
 	'/login': Login,
 	'/profile': Profile,
 	'/room': Room,
 	'/sign-up': SignUp,
+	'/reset-credentials': ResetCredentials,
 };
 
-let live_events = []; // {selector:obj, event: 'event_name', handler: () => {}}
-
+window.live_events = []; // {selector:obj, event: 'event_name', handler: () => {}}
 const router = async () => {
 	// detach events
 	for (const event_obj of live_events) {
-		document.querySelector(event_obj.selector).removeEventListener(event_obj.event, event_obj.handler);
+		event_obj.element.removeEventListener(event_obj.event, event_obj.handler);
 	}
 
 	live_events = [];
@@ -49,6 +51,10 @@ const router = async () => {
 
 	// get the page from our route if it is there else 404
 	let page = routes[parsed_url] ? routes[parsed_url] : Error404;
+	
+	// setting title dynamically
+	document.title = `${Utils.toProperCase(request.resource)} | Peer Chat`;
+
 	content.innerHTML = await page.render();
 
 	let after_render = await page.after_render();
