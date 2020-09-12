@@ -42,6 +42,36 @@ const Utils = {
 			return;
 		}
 	},
+
+	handle_css: function handle_css(css_files_array) {
+		const all_downloded_css = document.querySelectorAll('link[data-file]');
+		const all_enabled_css = [];
+
+		// loop all link tag (all link tag has data-file attr)
+		for (const css_file of all_downloded_css) {
+			// if css_files_array includes this data-file then enable and maintain array of enabled css
+			if (css_files_array.includes(css_file.dataset.file)) {
+				css_file.disabled = false;
+				all_enabled_css.push(css_file.dataset.file);
+			} else {
+				// else disable
+				css_file.disabled = true;
+			}
+		}
+
+		// loop css_files_array and if it is not already enabled, download and apply
+		for (const css_file of css_files_array) {
+			if (all_enabled_css.includes(css_file) == false) {
+				const head = document.getElementsByTagName('head')[0];
+				let link = document.createElement('link');
+				link.dataset.file = css_file;
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.setAttribute('href', `./css/${css_file}.css`);
+				head.appendChild(link);
+			}
+		}
+	},
 };
 
 export default Utils;

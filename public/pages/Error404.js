@@ -1,6 +1,10 @@
 import utils from './../services/utils.js';
 
 let Error404 = {
+	before_render: async () => {
+		utils.handle_css(['common', 'Error404']);
+	},
+
 	render: async () => {
 		return `
 		<div class="text"><p>404</p></div>
@@ -49,8 +53,7 @@ let Error404 = {
 		  </div>
 		</a>`;
 	},
-	// All the code related to DOM interactions and controls go in here.
-	// This is a separate call as these can be registered only after the DOM has been painted
+
 	after_render: async () => {
 		// handling all anchor_tag's
 		document.getElementById('_404').disabled = false;

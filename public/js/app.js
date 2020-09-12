@@ -55,9 +55,14 @@ const router = async () => {
 	// setting title dynamically
 	document.title = `${Utils.toProperCase(request.resource)} | Peer Chat`;
 
+	// handle css here
+	await page.before_render();
+	
+	// add DOM here
 	content.innerHTML = await page.render();
 
-	let after_render = await page.after_render();
+	// other computation here
+	await page.after_render();
 };
 
 window.addEventListener('hashchange', router);

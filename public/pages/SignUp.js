@@ -1,6 +1,10 @@
 import utils from './../services/utils.js';
 
 let SignUp = {
+	before_render: async () => {
+		utils.handle_css(['common', 'SignUp']);
+	},
+
 	render: async () => {
 		return `
 		<div class="form-wrapper">
@@ -68,8 +72,7 @@ let SignUp = {
 		</div>
 		`;
 	},
-	// All the code related to DOM interactions and controls go in here.
-	// This is a separate call as these can be registered only after the DOM has been painted
+
 	after_render: async () => {
 		document.querySelector('body').classList.add('form-membership');
 
