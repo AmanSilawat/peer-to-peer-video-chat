@@ -2,7 +2,7 @@ import utils from './../services/utils.js';
 
 let Error404 = {
 	before_render: async () => {
-		utils.handle_css(['common', 'Error404']);
+		utils.handle_css(['Error404']);
 	},
 
 	render: async () => {
@@ -55,8 +55,8 @@ let Error404 = {
 	},
 
 	after_render: async () => {
+		document.body.classList = [];
 		// handling all anchor_tag's
-		document.getElementById('_404').disabled = false;
 		utils.inner_route(document.querySelectorAll('a'));
 	},
 };
