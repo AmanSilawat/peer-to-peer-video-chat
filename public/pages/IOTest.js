@@ -46,14 +46,14 @@ async function get_audio() {
     const stream = await navigator.mediaDevices
         .getUserMedia({ audio: true })
         .then((stream) => {
-            var AudioContext = window.AudioContext || window.webkitAudioContext;
-            const audioCtx = new AudioContext();
-            analyzer = audioCtx.createAnalyser();
-            const source = audioCtx.createMediaStreamSource(stream);
-            source.connect(analyzer);
-            analyzer.fftSize = 2 ** 8;
-            bufferLength = analyzer.frequencyBinCount;
-            const timeData = new Uint8Array(bufferLength);
+            var AudioContext = window.AudioContext || window.webkitAudioContext; 
+            const audioCtx = new AudioContext(); //nodes and audio and decode
+            analyzer = audioCtx.createAnalyser(); //used to visual audio
+            const source = audioCtx.createMediaStreamSource(stream); //to play and manupulate audio
+            source.connect(analyzer);  //capture audio data
+            analyzer.fftSize = 2 ** 8; //unsigned long value
+            bufferLength = analyzer.frequencyBinCount; // half of fftsize Unsigned integers
+            const timeData = new Uint8Array(bufferLength); // 8Bit unsigned integers
             const frequencyData = new Uint8Array(bufferLength);
             drawTimeData(timeData);
             drawFrequency(frequencyData);
@@ -68,28 +68,28 @@ async function get_audio() {
 }
 
 function drawTimeData(timeData) {
-    analyzer.getByteTimeDomainData(timeData);
-    ctx.clearRect(0, 0, WIDTH, HEIGHT);
+    analyzer.getByteTimeDomainData(timeData); // copy waveform
+    ctx.clearRect(0, 0, WIDTH, HEIGHT); // erase pixels
     ctx.lineWidth = 10;
     ctx.strokeStyle = '#ffc600';
-    ctx.beginPath();
+    ctx.beginPath(); // for creating new path
     const sliceWidth = WIDTH / bufferLength;
     let x = 0;
     timeData.forEach((data, i) => {
         const v = data / 128;
         const y = (v * HEIGHT) / 2;
         if (i === 0) {
-            ctx.moveTo(x, y);
+            ctx.moveTo(x, y); // start new path by from point x and y
         } else {
-            ctx.lineTo(x, y);
+            ctx.lineTo(x, y); // add straight line
         }
         x += sliceWidth;
     });
-    ctx.stroke();
-    requestAnimationFrame(() => drawTimeData(timeData));
+    ctx.stroke(); // draw in canvas
+    requestAnimationFrame(() => drawTimeData(timeData)); // request to perform animation
 }
 function drawFrequency(frequencyData) {
-    analyzer.getByteFrequencyData(frequencyData);
+    analyzer.getByteFrequencyData(frequencyData); //fill Uint8Array date of analyzer
     const barWidth = (WIDTH / bufferLength) * 2.5;
     let x = 0;
     frequencyData.forEach((amount) => {
@@ -99,7 +99,7 @@ function drawFrequency(frequencyData) {
         const barHeight = HEIGHT * percent * 0.5;
         const [r, g, b] = hslToRgb(h, s, l);
         ctx.fillStyle = `rgb(${r},${g},${b})`;
-        ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
+        ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight); // create rectangle
         x += barWidth + 2;
     });
     requestAnimationFrame(() => drawFrequency(frequencyData));
