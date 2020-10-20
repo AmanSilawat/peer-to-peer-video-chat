@@ -72,6 +72,34 @@ const Utils = {
 			}
 		}
 	},
+
+	handle_js: function handle_js(js_files_array) {
+		const all_downloded_js = document.querySelectorAll('script[data-file]');
+		const all_enabled_js = [];
+
+		// loop all link tag (all link tag has data-file attr)
+		for (const js_file of all_downloded_js) {
+			// if js_files_array includes this data-file then enable and maintain array of enabled js
+			if (js_files_array.includes(js_file.dataset.file)) {
+				js_file.disabled = false;
+				all_enabled_js.push(js_file.dataset.file);
+			} else {
+				// else disable
+				js_file.disabled = true;
+			}
+		}
+
+		// loop js_files_array and if it is not already enabled, download and apply
+		for (const js_file of js_files_array) {
+			if (all_enabled_js.includes(js_file) == false) {
+				// const head = document.getElementsByTagName('head')[0];
+				let script = document.createElement('script');
+				script.dataset.file = js_file;
+				script.setAttribute('src', `./js/${js_file}.js`);
+				document.body.appendChild(script);
+			}
+		}
+	},
 };
 
 export default Utils;
